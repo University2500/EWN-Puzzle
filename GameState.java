@@ -5,7 +5,7 @@ public class GameState {
     // ============================================================
     // TODO: Implement generatePossibleMoves()
     // ------------------------------------------------------------
-    public static void generatePossibleMoves(){
+    public static int[] generatePossibleMoves(){
         int AvailableMoves[][] = new int[10][10];
 
         int counter=0;
@@ -101,6 +101,7 @@ public class GameState {
                 System.out.print(possibleMoves[i]+" ");
             }
         }
+        return possibleMoves;
     }
 
     // This method should generate all possible moves based on:

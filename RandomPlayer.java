@@ -1,10 +1,14 @@
+import java.util.Random;
 public class RandomPlayer extends Player{
     // ============================================================
     public RandomPlayer(String playerName) {
         super(playerName);
     }
-    public void chooseMove(){
-
+    public int chooseMove(){
+            int[] chooseMoves = GameState.generatePossibleMoves();
+            Random rand = new Random();
+            int i =  rand.nextInt(1,(chooseMoves.length)-1);
+            return chooseMoves[i];
     }
     // TODO: Implement chooseMove()
 
