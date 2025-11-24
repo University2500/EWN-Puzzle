@@ -1,5 +1,8 @@
 public class AIPlayer extends Player{
-    // ============================================================
+    // ============================================================\
+    public AIPlayer(String playerName) {
+        super(playerName);
+    }
     // TODO: Implement chooseMove()
     // ------------------------------------------------------------
     // This method defines how the AI selects its next move.

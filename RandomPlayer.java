@@ -1,6 +1,13 @@
 public class RandomPlayer extends Player{
     // ============================================================
+    public RandomPlayer(String playerName) {
+        super(playerName);
+    }
+    public void chooseMove(){
+
+    }
     // TODO: Implement chooseMove()
+
     // ------------------------------------------------------------
     // This method randomly choose the moves to solve the puzzle
     //

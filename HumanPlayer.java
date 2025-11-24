@@ -1,5 +1,11 @@
 public class HumanPlayer extends Player{
+    public HumanPlayer(String playerName) {
+        super(playerName);
+    }
     // ============================================================
+    public static void chooseMove(){
+
+    }
     // TODO: Implement chooseMove()
     // ------------------------------------------------------------
     // This method prompts the human player to choose the next move

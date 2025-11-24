@@ -1,4 +1,7 @@
 public abstract class Player {
+    public Player(String playerName) {
+        System.out.println("Hi "+  playerName);
+    }
     // ============================================================
     // TODO: Implement printMove()
     // ------------------------------------------------------------
