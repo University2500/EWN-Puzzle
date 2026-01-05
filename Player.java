@@ -2,6 +2,10 @@ public abstract class Player {
     public Player(String playerName) {
         System.out.println("Hi "+  playerName);
     }
+
+    public GameState chooseMove(GameState currentState) {
+        return currentState;
+    }
     // ============================================================
     // TODO: Implement printMove()
     // ------------------------------------------------------------

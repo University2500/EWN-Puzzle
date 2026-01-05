@@ -1,130 +1,114 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameState {
+    private int[] positions;
+    private int target;
+    private int turn;
+    private List<Integer> diceSequence;
 
-    // ============================================================
-    // TODO: Implement generatePossibleMoves()
-    // ------------------------------------------------------------
-    public static int[] generatePossibleMoves(){
-        int AvailableMoves[][] = new int[10][10];
-
-        int counter=0;
-        int position1 = 0,position2 = 0,position3 = 0,position4 = 0,position5 = 0,position6 = 0;
-        //determinne which piece moving now
-        int currentPiece=0;
-        //Create a hashmap(dictionary for the piece info( number, position of piece)
-        Map<Integer, Integer> pieceInfo = new HashMap<>();
-        pieceInfo.put(1,position1);
-        pieceInfo.put(2,position2);
-        pieceInfo.put(3,position3);
-        pieceInfo.put(4,position4);
-        pieceInfo.put(5,position5);
-        pieceInfo.put(6,position6);
-        //Printing the 10x10 board
-        for(int i=0;i<10;i++){
-            for(int j=0;j<10;j++){
-                AvailableMoves[i][j]=counter;
-
-                counter++;
-            }
-
-        }
-
-        //Creates an array for the possible moves
-        int[] possibleMoves = new int[8];
-        //Gets the piece informatioon from hash map
-        int InitialPosition = pieceInfo.get(currentPiece);
-        AvailableMoves[InitialPosition/10][(InitialPosition%10)]= -1;
-
-        for(int i=0;i<10;i++){
-            for(int j=0;j<10;j++){
-                System.out.print(AvailableMoves[i][j]+" ");
-            }
-            System.out.println();
-        }
-
-        /*determining whether the piece is on an edge
-        first if statement determines if it is on the right edge (69,79,89 etc)
-        secoond if statement determines if it is on the left edge (50,30,20 etc)
-        third if statement determines if it is on the top edge (0,1,2 etc)
-        fourth if statement determine if it is on the bottom edge (90,,91,92 etc)
-         */
-        if(InitialPosition%10==9){
-            possibleMoves[6]=-1;
-            possibleMoves[2] =-1;
-            possibleMoves[3] =-1;
-        }
-        if(InitialPosition%10==0){
-            possibleMoves[7] = -1;
-            possibleMoves[4] =-1;
-            possibleMoves[5] =-1;
-        }
-        if(InitialPosition/10==0){
-            possibleMoves[0]=-1;
-            possibleMoves[2] =-1;
-            possibleMoves[5] =-1;
-        }
-        if(InitialPosition/10==9){
-            possibleMoves[1]=-1;
-            possibleMoves[3] =-1;
-            possibleMoves[4] =-1;
-        }
-
-
-        if (possibleMoves[0]!=-1){
-            possibleMoves[0] = AvailableMoves[(InitialPosition/10)-1][(InitialPosition%10)]; //move up
-        }
-        if (possibleMoves[1]!=-1){
-            possibleMoves[1] = AvailableMoves[(InitialPosition/10)+1][(InitialPosition%10)]; //move down
-        }
-        if (possibleMoves[2]!=-1){
-            possibleMoves[2] = AvailableMoves[(InitialPosition/10)-1][(InitialPosition%10)+1]; //diagonal up right
-        }
-        if (possibleMoves[3]!=-1){
-            possibleMoves[3] = AvailableMoves[(InitialPosition/10)+1][(InitialPosition%10)+1]; //diagonal down right
-        }
-        if (possibleMoves[4]!=-1){
-            possibleMoves[4] = AvailableMoves[(InitialPosition/10)+1][(InitialPosition%10)-1]; //diagonal down left
-        }
-        if (possibleMoves[5]!=-1){
-            possibleMoves[5] = AvailableMoves[(InitialPosition/10)-1][(InitialPosition%10)-1]; //diagonal up left
-        }
-        if (possibleMoves[6]!=-1){
-            possibleMoves[6] = AvailableMoves[(InitialPosition/10)][(InitialPosition%10)+1]; //move right
-        }
-        if (possibleMoves[7]!=-1){
-            possibleMoves[7] = AvailableMoves[(InitialPosition/10)][(InitialPosition%10)-1];  //move left
-        }
-        System.out.println("");
-        for(int i=0;i<possibleMoves.length;i++){
-            if(possibleMoves[i]!=-1){
-                System.out.print(possibleMoves[i]+" ");
-            }
-        }
-        return possibleMoves;
+    public GameState(int[] initialPositions, int targetPiece, int startingTurn, List<Integer> diceSeq) {
+        this.positions = new int[6];
+        System.arraycopy(initialPositions, 0, this.positions, 0, 6);
+        this.target = targetPiece;
+        this.turn = startingTurn;
+        this.diceSequence = diceSeq;
     }
 
-    // This method should generate all possible moves based on:
-    //  - The current piece positions
-    //  - The current dice roll
-    //
-    // You may decide on the return type, parameters, and internal logic.
-    // ============================================================
-
-
-    // ============================================================
-    // TODO: Implement isWinning()
-    public static void isWinning(){
-
+    public GameState(GameState original) {
+        this.positions = new int[6];
+        System.arraycopy(original.positions, 0, this.positions, 0, 6);
+        this.target = original.target;
+        this.turn = original.turn;
+        this.diceSequence = original.diceSequence;
     }
-    // ------------------------------------------------------------
-    // This method should check whether the current piece positions
-    // fulfill the winning condition
-    //
-    // You may decide on the return type, parameters, and internal logic.
-    // ============================================================
 
+    public List<GameState> generatePossibleMoves() {
+        List<GameState> moves = new ArrayList<>();
 
-    // You may also add any other helper functions, variables,
-    // and constructors needed for your implementation.
+        if (turn >= diceSequence.size()) {
+            return moves;
+        }
+
+        int diceRoll = diceSequence.get(turn);
+
+        List<Integer> activePieces = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            if (positions[i] != -1) {
+                activePieces.add(i + 1);
+            }
+        }
+
+        List<Integer> movable = new ArrayList<>();
+        if (activePieces.contains(diceRoll)) {
+            movable.add(diceRoll);
+        } else {
+
+            Integer lower = null;
+            Integer higher = null;
+            for (int p : activePieces) {
+                if (p < diceRoll && (lower == null || p > lower)) {
+                    lower = p;
+                }
+                if (p > diceRoll && (higher == null || p < higher)) {
+                    higher = p;
+                }
+            }
+            if (lower != null) movable.add(lower);
+            if (higher != null) movable.add(higher);
+        }
+
+        int[] dRow = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dCol = {-1, 0, 1, -1, 1, -1, 0, 1};
+
+        for (int piece : movable) {
+            int currentPos = positions[piece - 1];
+            int row = currentPos / 10;
+            int col = currentPos % 10;
+
+            for (int d = 0; d < 8; d++) {
+                int newRow = row + dRow[d];
+                int newCol = col + dCol[d];
+
+                if (newRow < 0 ||  newRow >= 10 || newCol < 0 || newCol >= 10) {
+                    continue;
+                }
+
+                int newPos = newRow * 10 + newCol;
+
+                if (newPos == 22) {
+                    continue;
+                }
+
+                GameState next = new GameState(this);
+                next.positions[piece - 1] = newPos;
+                next.turn = this.turn + 1;
+
+                for (int i = 0; i < 6; i++) {
+                    if (positions[i] == newPos && positions[i] != -1) {
+                        next.positions[i] = -1;
+                        break;
+                    }
+                }
+
+                moves.add(next);
+            }
+        }
+
+        return moves;
+    }
+
+    public boolean isWinning() {
+        return positions[target - 1] == 0;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public int[] getPositions() {
+        int[] copy = new int[6];
+        System.arraycopy(positions, 0, copy, 0, 6);
+        return copy;
+    }
 }

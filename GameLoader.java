@@ -1,84 +1,63 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
-public class GameLoader{
-    private int level;
-    private int targetPiece;   
-    private int maxMoves;        
-    private ArrayList<Integer> diceSequence; 
-    private HashMap<Integer, Integer> piecePosition;
-    public GameLoader(String filename){
-        diceSequence = new ArrayList<>();
-        piecePosition = new HashMap<>();
-        try{
-            Scanner scanner = new Scanner(new File(filename));
-            level = Integer.parseInt(scanner.nextLine().trim());
-            targetPiece = Integer.parseInt(scanner.nextLine().trim());
-            maxMoves = Integer.parseInt(scanner.nextLine().trim());
-            String diceLine = scanner.nextLine().trim();
-            String[] numbers = diceLine.split("\\s+");
-            for (String num : numbers) diceSequence.add(Integer.parseInt(num));
-            while (scanner.hasNextLine()){
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) continue;
-                String[] parts = line.split("\\s+");
-                int piece = Integer.parseInt(parts[0]);
-                int position = Integer.parseInt(parts[1]);
-                piecePosition.put(piece, position); 
+public class GameLoader {
+    private int targetPiece;
+    private int[] piecePositions = new int[6];
+    private List<Integer> diceSequence = new ArrayList<>();
+    public GameLoader(String filename) {
+        try (Scanner scanner = new Scanner(new File(filename))) {
+            targetPiece = scanner.nextInt();
+
+            for (int i = 0; i < 6; i++) {
+                piecePositions[i] = scanner.nextInt();
             }
-            scanner.close();
-        } catch (FileNotFoundException e){
-            System.out.println("File not found: " + filename);
-        } catch (Exception e){
-            System.out.println("Error reading file: " + filename);
+
+            while (scanner.hasNextInt()) {
+                diceSequence.add(scanner.nextInt());
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("Error: Level file '" + filename + "' not found.");
+            System.exit(1);
         }
     }
     public void printGameDetails() {
-        try (PrintWriter writer = new PrintWriter("moves.txt")){
-            writer.println("=== EWN Variant - Level " + level + " ===");
-            writer.println("Target Piece: " + targetPiece);
-            writer.println("Maximum Moves: " + maxMoves);
-            writer.println();
-            writer.print("Dice Sequence: ");
-            for (int i = 0; i < diceSequence.size(); i++){
-                writer.print(diceSequence.get(i));
-                writer.print(" ");
+        // 1. Print to Console (for you to see)
+        System.out.println("--- Loading Game Data ---");
+        System.out.println("Target Piece: " + targetPiece);
+        System.out.println("Positions: " + Arrays.toString(piecePositions));
+        System.out.println("Dice Sequence: " + diceSequence);
+
+        // 2. Write to File (your existing logic)
+        try (PrintWriter writer = new PrintWriter(new FileWriter("moves.txt", true))) {
+            // Print dice sequence
+            for (int i = 0; i < diceSequence.size(); i++) {
+                writer.print(diceSequence.get(i) + (i < diceSequence.size() - 1 ? " " : ""));
             }
-            writer.println("\n");
-            writer.println("Initial Piece Positions:");
-            writer.println("Piece   Position");
-            writer.println("-----   ---------");
-            for (int p = 1; p <= 6; p++){
-                Integer pos = piecePosition.get(p);
-                String status = "";
-                if (pos == null){
-                    status = "not placed";
-                } else if (pos == -1){
-                    status = "captured";
-                } else{
-                    status = pos.toString();
-                }
-                writer.printf("%5d   %s%n", p, status);
-            }
-            writer.println("\n-----------------------------------");
-            writer.println("Game simulation starts below.....");
             writer.println();
-        } catch (Exception e){
-            System.out.println("Error: Cannot write to moves.txt");
+            writer.println(targetPiece);
+
+            // Print positions
+            for (int i = 0; i < 6; i++) {
+                writer.print(piecePositions[i] + (i < 5 ? " " : ""));
+            }
+            writer.println();
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
         }
     }
-    public int getLevel(){ return level; }
-    public int getTargetPiece(){ return targetPiece; }
-    public int getMaxMoves(){ return maxMoves; }
-    public ArrayList<Integer> getDiceSequence(){ return diceSequence; }
-    public HashMap<Integer, Integer> getPiecePosition(){ return piecePosition; }
-    public int getPositionOf(int piece) {
-        Integer pos = piecePosition.get(piece);
-        return (pos == null) ? -999 : pos;
+    public int getTargetPiece() {
+        return targetPiece;
     }
-    public static void main(String[] args) {
-        GameLoader loader = new GameLoader("gamedata.txt");
-        loader.printGameDetails();
-        System.out.println("GameLoader executed successfully! Check moves.txt");
+    public int[] getPiecePositions() {
+        int[] copy = new int[6];
+        System.arraycopy(piecePositions, 0, copy, 0, 6);
+        return copy;
+    }
+    public List<Integer> getDiceSequence() {
+        return new ArrayList<>(diceSequence);
     }
 }
