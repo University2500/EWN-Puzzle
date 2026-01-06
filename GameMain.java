@@ -31,7 +31,7 @@ public class GameMain {
         String filename = "TestCases/level" + level + ".txt"; // Ensure folder path is correct
 
         GameLoader loader = new GameLoader(filename);
-
+        loader.printGameDetails(player.getplayerName());
         // 3. Initialize the Game State
         GameState currentState = new GameState(
                 loader.getPiecePositions(),
@@ -40,7 +40,7 @@ public class GameMain {
                 loader.getDiceSequence()
         );
 
-        loader.printGameDetails();
+
 
 
         System.out.println("\n--- GAME START ---");
@@ -48,30 +48,31 @@ public class GameMain {
         // Loop while the game is NOT won and we still have dice rolls left
         while (!currentState.isWinning()) {
 
-            // Check if we ran out of turns (dice rolls)
+            // 1. Ask player for the next move
+            GameState nextState = player.chooseMove(currentState);
+
+            // 2. Update the current state
+            currentState = nextState;
+
+            // 3. CRITICAL: Save the move to moves.txt
+            // If this line is missing, the file will stop at line 4!
+            player.printMove(currentState);
+
+            // Safety check to stop infinite loops if needed
             if (currentState.getTurn() >= loader.getDiceSequence().size()) {
-                System.out.println("Game Over: No more turns left!");
+                System.out.println("No more dice rolls!");
                 break;
             }
-
-            System.out.println("\nTurn " + (currentState.getTurn() + 1));
-
-            // CRITICAL STEP:
-            // 1. Player (Random or Human) chooses the move.
-            // 2. We UPDATE 'currentState' with the result.
-            currentState = player.chooseMove(currentState);
-
-            // Optional: Print the board after the move
-            System.out.println("Current Positions: " + Arrays.toString(currentState.getPositions()));
         }
 
         // ============================================================
         // 6. Check for Win Result
         // ============================================================
         if (currentState.isWinning()) {
-            System.out.println("\n🎉 CONGRATULATIONS! " + player + " won the game! 🎉");
+            System.out.println("\n🎉 CONGRATULATIONS! " + player.getplayerName() + " won the game! 🎉");
         } else {
             System.out.println("\nGame Over.");
         }
+
     }
 }

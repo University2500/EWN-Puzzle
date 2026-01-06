@@ -3,6 +3,11 @@ public class AIPlayer extends Player{
     public AIPlayer(String playerName) {
         super(playerName);
     }
+
+    @Override
+    public GameState chooseMove(GameState currentState) {
+        return null;
+    }
     // TODO: Implement chooseMove()
     // ------------------------------------------------------------
     // This method defines how the AI selects its next move.

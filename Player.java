@@ -1,29 +1,50 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 public abstract class Player {
+    protected String playerName;
+
     public Player(String playerName) {
-        System.out.println("Hi "+  playerName);
+        this.playerName = playerName;
     }
 
-    public GameState chooseMove(GameState currentState) {
-        return currentState;
+    // Getter for the name (used in GameMain)
+    public String getplayerName() {
+        return this.playerName;
     }
-    // ============================================================
-    // TODO: Implement printMove()
-    // ------------------------------------------------------------
-    // This method print the chosen move of the player into the
-    // "moves.txt" file
-    //
-    // You may decide on the return type, parameters, and internal logic.
-    // ============================================================
 
     // ============================================================
-    // TODO: Implement abstract function - chooseMove()
+    // 1. ABSTRACT FUNCTION: chooseMove()
     // ------------------------------------------------------------
-    // This is an abstract method that defines how the player selects
-    // a move. You should implement the logic in the subclasses.
-    //
-    // You may decide on the return type, and parameters.
+    // We removed the body { ... } and added 'abstract'.
+    // This forces HumanPlayer and RandomPlayer to implement their own.
     // ============================================================
+    public abstract GameState chooseMove(GameState currentState);
 
-    // You may also add any other helper functions, variables,
-    // and constructors needed for your implementation.
+    // ============================================================
+    // 2. IMPLEMENTED: printMove()
+    // ------------------------------------------------------------
+    // Writes the new positions to "moves.txt" after a move is made.
+    // ============================================================
+    public void printMove(GameState state) {
+        // "true" means APPEND to the file. We add to the existing list.
+        try (PrintWriter out = new PrintWriter(new FileWriter("moves.txt", true))) {
+
+            int[] positions = state.getPositions();
+
+            // Loop through positions and print them with spaces
+            for (int i = 0; i < positions.length; i++) {
+                out.print(positions[i]);
+                // Add a space only if it's not the last number
+                if (i < positions.length - 1) {
+                    out.print(" ");
+                }
+            }
+            out.println(); // Move to next line for the next turn
+
+        } catch (IOException e) {
+            System.out.println("Error writing to moves.txt: " + e.getMessage());
+        }
+    }
 }
