@@ -28,7 +28,7 @@ public class GameMain {
         // 2. Select Level and Load Data
         System.out.println("Select a level: (1-4)");
         int level = input.nextInt();
-        String filename = "TestCases/level" + level + ".txt"; // Ensure folder path is correct
+        String filename = "TestCases/level" + level + ".txt"; // Chooses the level file based on the input
 
         GameLoader loader = new GameLoader(filename);
         loader.printGameDetails(player.getplayerName());
@@ -45,7 +45,7 @@ public class GameMain {
 
         System.out.println("\n--- GAME START ---");
 
-        // Loop while the game is NOT won and we still have dice rolls left
+        // Loop while the game is NOT won and still have dice rolls left
         while (!currentState.isWinning()) {
 
             // 1. Ask player for the next move
@@ -54,22 +54,19 @@ public class GameMain {
             // 2. Update the current state
             currentState = nextState;
 
-            // 3. CRITICAL: Save the move to moves.txt
-            // If this line is missing, the file will stop at line 4!
             player.printMove(currentState);
 
-            // Safety check to stop infinite loops if needed
+            // Safety check to stop infinite loops
             if (currentState.getTurn() >= loader.getDiceSequence().size()) {
                 System.out.println("No more dice rolls!");
                 break;
             }
         }
 
-        // ============================================================
         // 6. Check for Win Result
-        // ============================================================
         if (currentState.isWinning()) {
             System.out.println("\n🎉 CONGRATULATIONS! " + player.getplayerName() + " won the game! 🎉");
+            System.out.println("Total Turns:  " + currentState.getTurn());
         } else {
             System.out.println("\nGame Over.");
         }

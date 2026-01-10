@@ -14,19 +14,12 @@ public abstract class Player {
         return this.playerName;
     }
 
-    // ============================================================
     // 1. ABSTRACT FUNCTION: chooseMove()
-    // ------------------------------------------------------------
     // We removed the body { ... } and added 'abstract'.
     // This forces HumanPlayer and RandomPlayer to implement their own.
-    // ============================================================
     public abstract GameState chooseMove(GameState currentState);
 
-    // ============================================================
-    // 2. IMPLEMENTED: printMove()
-    // ------------------------------------------------------------
     // Writes the new positions to "moves.txt" after a move is made.
-    // ============================================================
     public void printMove(GameState state) {
         // "true" means APPEND to the file. We add to the existing list.
         try (PrintWriter out = new PrintWriter(new FileWriter("moves.txt", true))) {

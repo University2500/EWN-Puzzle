@@ -26,20 +26,19 @@ public class GameLoader {
         }
     }
 
-    // UPDATED: Now accepts playerName and overwrites the file correctly
+    // prints the Game Details
     public void printGameDetails(String playerName) {
 
-        // 1. Print to Console (Optional, for debugging)
+        // 1. Print to Console
         System.out.println("--- Loading Game Data ---");
         System.out.println("Target Piece: " + targetPiece);
         System.out.println("Positions: " + Arrays.toString(piecePositions));
         System.out.println("Dice Sequence: " + diceSequence);
 
-        // 2. Write to File (CORRECTED)
-        // 'false' here is CRITICAL. It clears the file to start a new game log.
+        // 2. Write to File
         try (PrintWriter writer = new PrintWriter(new FileWriter("moves.txt", false))) {
 
-            // Line 1: Player Name (Required by assignment)
+            // Line 1: Player Name
             writer.println(playerName);
 
             // Line 2: Dice Sequence

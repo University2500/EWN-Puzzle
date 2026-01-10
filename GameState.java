@@ -34,8 +34,6 @@ public class GameState {
 
         int diceRoll = diceSequence.get(turn);
 
-        // ... (Keep your existing logic for activePieces and movable selection) ...
-        // ... (This part of your code was correct, no changes needed until the loop) ...
 
         List<Integer> activePieces = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
@@ -74,7 +72,7 @@ public class GameState {
 
                 int newPos = newRow * 10 + newCol;
 
-                // Check Forbidden Square 22 [cite: 17]
+                // Check Forbidden Square 22
                 if (newPos == 22) {
                     continue;
                 }
@@ -83,16 +81,15 @@ public class GameState {
                 next.positions[piece - 1] = newPos;
                 next.turn = this.turn + 1;
 
-                // --- MODIFIED HERE: Save the readable description ---
+                // show move description
                 next.moveDescription = "Piece " + piece + " moves to (" + newRow + ", " + newCol + ")";
 
                 // Check for captures
                 for (int i = 0; i < 6; i++) {
-                    // Note: positions[i] refers to the OLD state (this.positions)
                     // If an enemy is at the destination, capture it in the NEXT state
                     if (positions[i] == newPos && positions[i] != -1) {
                         next.positions[i] = -1;
-                        // Optional: Update description to mention capture
+
                         next.moveDescription += " (Captures Piece " + (i + 1) + ")";
                         break;
                     }
@@ -117,6 +114,14 @@ public class GameState {
         int[] copy = new int[6];
         System.arraycopy(positions, 0, copy, 0, 6);
         return copy;
+    }
+
+    public int getTargetPiece() {
+        return target;
+    }
+
+    public List<Integer> getDiceSequence() {
+        return new ArrayList<>(diceSequence); // Return a copy for safety
     }
 
     @Override

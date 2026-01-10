@@ -5,13 +5,12 @@ public class HumanPlayer extends Player{
     public HumanPlayer(String playerName) {
         super(playerName);
     }
-    // ============================================================
+
     // TODO: Implement chooseMove()
     public GameState chooseMove(GameState currentState) {
         // 1. Get all possible legal moves
-        // Import this at the top of your file
 
-// ... inside your method ...
+
 
         List<GameState> possibleMoves = currentState.generatePossibleMoves();
 
@@ -28,7 +27,7 @@ public class HumanPlayer extends Player{
             System.out.println("[" + (i + 1) + "] " + possibleMoves.get(i).toString());
         }
 
-// 4. Get User Input with Validation
+// 4. Get User Input with validation
         Scanner scanner = new Scanner(System.in);
         int choice = -1;
 
@@ -56,9 +55,6 @@ public class HumanPlayer extends Player{
 
         return selectedMove;
     }
-    // ------------------------------------------------------------
-    // This method prompts the human player to choose the next move
-    //
     // You may decide on the return type, parameters, and logic.
     // ============================================================
 

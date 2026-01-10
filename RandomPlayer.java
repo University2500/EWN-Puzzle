@@ -2,7 +2,7 @@ import java.util.List;
 import java.util.Random;
 public class RandomPlayer extends Player{
     private Random random;
-    // ============================================================
+
     public RandomPlayer(String playerName) {
         super(playerName);
         this.random = new Random();
